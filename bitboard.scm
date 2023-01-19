@@ -46,6 +46,17 @@
   (bit-vector-ior (bitboard-whitePieces bv) (bitboard-blackPieces bv) )
   )
 
-(define h (make-hash-table 10))	;;
+(define (update-square bv square newPiece)
+ (let ([mask (bit-vector-shift (make-bit-vector 64) square)])
+   (cond ((equal? newPiece 'p) (begin
+				 (bit-vector-ior (bitboard-blackPawns bv) mask)
+				 (bit-vector-ior (bitboard-blackPieces bv) mask)
+				 ))
+	 )
+   )
+
+  )
+
+
 (time(print (bitboard-blackQueen make-blank-board)))
 (time(print (bitboard-all-bits make-blank-board)))
