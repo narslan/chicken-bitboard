@@ -3,6 +3,8 @@
   defstruct
   test
   (chicken format)
+  (chicken string)
+  (only srfi-1 list-index)
   srfi-178 ;; bitvectors
   srfi-69 ;; hash tables
   )
@@ -28,12 +30,24 @@
 
 (define (display-bitboard bb)
   (begin
-   (hash-table-walk bb (lambda (k v) (print k (bitvector->string v))   ))))
+   (hash-table-walk bb (lambda (k v) (print k (bitvector->string v))))))
 
-(define coords (make-hash-table)
-  (coords )
-  )
+;; "a1" -> 0 "h8"-> 63
+(: square->int (string --> fixnum))
+(define (square->index square)
+  (let*-values ([f (string (car (string->list square)))]
+		[r (string (cadr (string->list square)))]
+		[y (substring-index-ci (car f) "abcdefgh")]
+		[z (substring-index-ci (car r) "12345678")]
+		[l (->number(cons (car y) z))]
+		)
+    (begin
+      (print l)
+      )
+              
+     ))
 
+(time (square->index "a4"))
 
 ;; (define testmask
 ;;   (let ([m1 (make-bitvector 64 0)]
@@ -52,9 +66,7 @@
 
 (define build-bitboard
   (let ([bb make-bitboard] )
-    (display-bitboard bb)
     (begin
       (hash-table-set! bb 'blackKing (make-bitvector-at 0))
       (hash-table-set! bb 'blackAll (make-bitvector-at 2))
-      (display-bitboard bb)
-      )))
+      bb)))
