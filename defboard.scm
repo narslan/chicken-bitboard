@@ -23,9 +23,7 @@
       (hash-table-set! squares "h8" 63)
       squares)))
 
-(define squares-array
-  `("a1" "b2" "c3" "h8") 
-  )
+(define squares-array  `("a1" "a2" "a3" "b2" "c3" "h8"))
 
 (define make-bitboard
   (let ([h (make-hash-table)])
@@ -50,14 +48,8 @@
   (let* ([f squares])
     (hash-table-ref squares square)))
 
-;; 'a1 -> 0 'h8-> 63
-(: square2->index (string --> fixnum))
-(define (square2->index square)
-  (list-index (lambda (x) (equal? square x )) squares-array))
-
-
-(time (print (square->index "a2")))
-(time (print (square2->index "h8")))
+;(time (print (square->index "a2")))
+;(time (print (square2->index "h8")))
 ;; (define testmask
 ;;   (let ([m1 (make-bitvector 64 0)]
 ;; 	[m2 (make-bitvector 64 1)]
@@ -70,8 +62,10 @@
 ;; a1 a2 a3 a4 .... h7 h8
 ;; 0  1  2  3 .... 62 63
 
-
-
+;; 'a1 -> 0 'h8-> 63
+(: square2->index (string --> fixnum))
+(define (square2->index square)
+  (list-index (lambda (x) (equal? square x )) squares-array))
 
 (define build-bitboard
   (let ([bb make-bitboard] )
@@ -79,3 +73,13 @@
       (hash-table-set! bb 'blackKing (make-bitvector-at 0))
       (hash-table-set! bb 'blackAll (make-bitvector-at 2))
       bb)))
+
+(define (update-board board square piece)
+  (let ([sq (square2->index square)])
+    (cond
+     ((equal? piece 'blackKing) (hash-table-set! board 'blackKing (make-bitvector-at sq)) ) 
+     (else "nothing happened")
+     )))
+
+(update-board build-bitboard 'a1 'blackKing)
+
