@@ -24,16 +24,17 @@
                     )
   )
 
-(define make-func-bitvector-reverse
-  (bitvector-unfold (lambda (_ b c)
-		      (values b (not c) c ))
+(define (make-func-bitvector-at id)
+  (bitvector-unfold (lambda (_ b)
+		      (values (if (equal? _ id) (not b) b) b))
 		    64
-                    #t
-		    #t
-                    )
+                    #f
+		    )
   )
-(print (bitvector->string make-func-bitvector))
-(print (bitvector->string make-func-bitvector-reverse))
+;(print (bitvector->string make-func-bitvector))
+;(print (bitvector->string (make-func-bitvector-at 0)))
+;(print (bitvector->string (make-func-bitvector-at 1)))
+;(print (bitvector->string (make-func-bitvector-at 2)))
 ;; "a1" -> 0 "h8"-> 63
 (: square->index (string --> fixnum))
 
@@ -46,9 +47,10 @@
 
 ;; functionally update 
 (define (updateBlackPawn bb square)
-  (update-bb bb blackPawn: (make-bitvector-at square))
-  
-  )
+  (begin
+    (update-bb bb blackPawn: (make-func-bitvector-at square))
+    bb
+    )  )
 
 (defstruct bb
   (blackPawn (make-bitvector 64 0) )
@@ -62,7 +64,13 @@
   (let ([sq (square->index asquare)])
     (cond
      ((equal? piece 'blackPawn)
-      (updateBlackPawn board sq)) 
+      (begin
+	(print (bitvector->string (make-func-bitvector-at sq)))
+	(update-bb board blackPawn: (make-func-bitvector-at sq))
+	(print (bitvector->string (bb-blackPawn board)))
+	)
+
+      ) 
      (else board))))
 
 
