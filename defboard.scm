@@ -14,16 +14,6 @@
   (let ([m1 (make-bitvector 64 0)])
     (begin
       (bitvector-set! m1 idx 1) m1)))
-(define squares
-  (let ([squares (make-hash-table)])
-    (begin
-      (hash-table-set! squares "a1" 0)
-      (hash-table-set! squares "a2" 1)
-      (hash-table-set! squares "a3" 2)
-      (hash-table-set! squares "h8" 63)
-      squares)))
-
-(define squares-array  `("a1" "a2" "a3" "b2" "c3" "h8"))
 
 (define make-bitboard
   (let ([h (make-hash-table)])
@@ -44,42 +34,27 @@
 
 ;; "a1" -> 0 "h8"-> 63
 (: square->index (string --> fixnum))
+
+(define lsquares  `(a1 a2 a3 a4 a5 a6 a7 a8 b1 b2 b3 b4 b5 b6 b7 b8 c1 c2 c3 c4 c5 c6 c7 c8 d1 d2 d3 d4 d5 d6 d7 d8 e1 e2 e3 e4 e5 e6 e7 e8 f1 f2 f3 f4 f5 f6 f7 f8 g1 g2 g3 g4 g5 g6 g7 g8 h1 h2 h3 h4 h5 h6 h7 h8))
+
+ ;; 'a1 -> 0 'h8-> 63
+(: square->index (symbol --> fixnum))
 (define (square->index square)
-  (let* ([f squares])
-    (hash-table-ref squares square)))
+  (list-index (lambda (x) (equal? square x )) lsquares))
 
-;(time (print (square->index "a2")))
-;(time (print (square2->index "h8")))
-;; (define testmask
-;;   (let ([m1 (make-bitvector 64 0)]
-;; 	[m2 (make-bitvector 64 1)]
-;; 	[m3 (bitvector-unfold (lambda (_ b) (values b (not b))) 64 #f)]
-;; 	)
-;;     (begin (bitvector-set! m1 0 1) m1)
-;;     (print (bitvector->string m1) )
-;;     (print (bitvector->string m3) )
-;;     ))
-;; a1 a2 a3 a4 .... h7 h8
-;; 0  1  2  3 .... 62 63
 
-;; 'a1 -> 0 'h8-> 63
-(: square2->index (string --> fixnum))
-(define (square2->index square)
-  (list-index (lambda (x) (equal? square x )) squares-array))
 
-(define build-bitboard
-  (let ([bb make-bitboard] )
-    (begin
-      (hash-table-set! bb 'blackKing (make-bitvector-at 0))
-      (hash-table-set! bb 'blackAll (make-bitvector-at 2))
-      bb)))
-
-(define (update-board board square piece)
-  (let ([sq (square2->index square)])
+(define (update-board board asquare piece)
+  (let ([sq (square->index asquare)])
     (cond
-     ((equal? piece 'blackKing) (hash-table-set! board 'blackKing (make-bitvector-at sq)) ) 
-     (else "nothing happened")
-     )))
+     ((equal? piece 'blackKing)
+      (begin
+	(hash-table-set! board 'blackKing (make-bitvector-at sq))
+	(hash-table-set! board 'blackAll (make-bitvector-at sq))
+	board
+	)) 
+     (else "nothing happened"))))
 
-(update-board build-bitboard 'a1 'blackKing)
+;(update-board build-bitboard 'a3 'blackKing)
+
 
