@@ -45,31 +45,61 @@
 (define (square->index square)
   (list-index (lambda (x) (equal? square x )) lsquares))
 
-;; functionally update 
-(define (updateBlackPawn bb square)
-  (begin
-    (update-bb bb blackPawn: (make-func-bitvector-at square))
-    bb
-    )  )
-
 (defstruct bb
   (blackPawn (make-bitvector 64 0) )
+  (blackKnight (make-bitvector 64 0) )
+  (blackBishop (make-bitvector 64 0) )
+  (blackRook (make-bitvector 64 0) )
+  (blackQueen (make-bitvector 64 0) )
   (blackKing (make-bitvector 64 0) )
+  (blackAll (make-bitvector 64 0) )
+  
   (whitePawn (make-bitvector 64 0) )
   (whiteKing (make-bitvector 64 0) )
-  )
+  (whiteAll (make-bitvector 64 0) ))
 
+;; functionally update 
+(define (updateBlackAll board square)
+  (update-bb board blackAll: (make-func-bitvector-at square)))
+
+(define  (updateBlackPawn  board square)
+   (update-bb board blackPawn: (make-func-bitvector-at square))
+   )
+
+(define  (updateBlackKnight  board square)
+  (update-bb board blackKnight: (make-func-bitvector-at square))
+ )
+
+(define  (updateBlackBishop  board square)
+  (update-bb board blackBishop: (make-func-bitvector-at square))
+ )
+
+(define  (updateBlackRook board square)
+  (begin
+
+    (update-bb board blackRook: (make-func-bitvector-at square))
+   
+    )
+  
+ )
+
+(define  (updateBlackQueen  board square)
+  (update-bb board blackQueen: (make-func-bitvector-at square))
+ )
+
+(define  (updateBlackKing  board square)
+  (update-bb board blackKing: (make-func-bitvector-at square))
+ )
 
 (define (update-board board asquare piece)
   (let ([sq (square->index asquare)])
     (cond
-     ((equal? piece 'blackPawn)
-      (begin
-	(print (bitvector->string (make-func-bitvector-at sq)))
-	(update-bb board blackPawn: (make-func-bitvector-at sq))
-	(print (bitvector->string (bb-blackPawn board)))
-	)
-
+     ((equal? piece 'blackPawn) (updateBlackPawn board sq)
+      (equal? piece 'blackKnight) (updateBlackKnight board sq)
+      (equal? piece 'blackBishop) (updateBlackBishop board sq)
+      (equal? piece 'blackRook) (updateBlackRook board sq)
+      (equal? piece 'blackQueen) (updateBlackQueen board sq)
+      (equal? piece 'blackKing) (updateBlackKing board sq)
       ) 
      (else board))))
 
