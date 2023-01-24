@@ -15,14 +15,27 @@
     (begin
       (bitvector-set! m1 idx 1) m1)))
 
-(define make-bitboard
+(defstruct bb
+  (blackPawn (make-bitvector 64 0) )
+  (blackKing (make-bitvector 64 0) )
+  (whitePawn (make-bitvector 64 0) )
+  (whiteKing (make-bitvector 64 0) )
+  )
+
+(define make-bitboard-hash
   (let ([h (make-hash-table)])
     (begin
       (hash-table-set! h 'blackPawn (make-bitvector 64 0))
       (hash-table-set! h 'blackKnight (make-bitvector 64 0))
+      (hash-table-set! h 'blackBishop (make-bitvector 64 0))
+      (hash-table-set! h 'blackRook (make-bitvector 64 0))
+      (hash-table-set! h 'blackQueen (make-bitvector 64 0))
       (hash-table-set! h 'blackKing (make-bitvector 64 0))
       (hash-table-set! h 'whitePawn (make-bitvector 64 0))
       (hash-table-set! h 'whiteKnight (make-bitvector 64 0))
+      (hash-table-set! h 'whiteBishop (make-bitvector 64 0))
+      (hash-table-set! h 'whiteRook (make-bitvector 64 0))
+      (hash-table-set! h 'whiteQueen (make-bitvector 64 0))
       (hash-table-set! h 'whiteKing (make-bitvector 64 0))
       (hash-table-set! h 'blackAll (make-bitvector 64 0)) ;;black all
       (hash-table-set! h 'whiteAll (make-bitvector 64 0)) ;;white all
@@ -44,7 +57,7 @@
 
 
 
-(define (update-board board asquare piece)
+(define (update-board-hash board asquare piece)
   (let ([sq (square->index asquare)])
     (cond
      ((equal? piece 'blackKing)
@@ -57,4 +70,17 @@
 
 ;(update-board build-bitboard 'a3 'blackKing)
 
+
+(define (update-board-hash board asquare piece)
+  (let ([sq (square->index asquare)])
+    (cond
+     ((equal? piece 'blackKing)
+      (begin
+	(hash-table-set! board 'blackKing (make-bitvector-at sq))
+	(hash-table-set! board 'blackAll (make-bitvector-at sq))
+	board
+	)) 
+     (else "nothing happened"))))
+
+;(update-board-hash build-bitboard 'a3 'blackKing)
 
