@@ -16,16 +16,17 @@
 (define (game-def)
   (let ([board (make-bb)])
     (begin
+      (update-board board 'a3 'blackPawn )
       (pp-tree board))))
 
 (define (game-hash)
   (let ([bb make-bitboard-hash])
     (begin
-      (update-board bb 'a3 'blackKing)
+      (update-board-hash bb 'a3 'blackKing)
       (display-bitboard bb)
       )))
 (game-def)
-(game-hash)
+;;(game-hash)
 (test-exit)
 
 

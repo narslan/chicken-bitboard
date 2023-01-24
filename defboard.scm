@@ -15,12 +15,56 @@
     (begin
       (bitvector-set! m1 idx 1) m1)))
 
+(define make-func-bitvector
+  (bitvector-unfold (lambda (_ b c)
+		      (values (not b) (not c) c))
+		    64
+                    #t
+		    #t
+                    )
+  )
+
+(define make-func-bitvector-reverse
+  (bitvector-unfold (lambda (_ b c)
+		      (values b (not c) c ))
+		    64
+                    #t
+		    #t
+                    )
+  )
+(print (bitvector->string make-func-bitvector))
+(print (bitvector->string make-func-bitvector-reverse))
+;; "a1" -> 0 "h8"-> 63
+(: square->index (string --> fixnum))
+
+(define lsquares  `(a1 a2 a3 a4 a5 a6 a7 a8 b1 b2 b3 b4 b5 b6 b7 b8 c1 c2 c3 c4 c5 c6 c7 c8 d1 d2 d3 d4 d5 d6 d7 d8 e1 e2 e3 e4 e5 e6 e7 e8 f1 f2 f3 f4 f5 f6 f7 f8 g1 g2 g3 g4 g5 g6 g7 g8 h1 h2 h3 h4 h5 h6 h7 h8))
+
+ ;; 'a1 -> 0 'h8-> 63
+(: square->index (symbol --> fixnum))
+(define (square->index square)
+  (list-index (lambda (x) (equal? square x )) lsquares))
+
+;; functionally update 
+(define (updateBlackPawn bb square)
+  (update-bb bb blackPawn: (make-bitvector-at square))
+  
+  )
+
 (defstruct bb
   (blackPawn (make-bitvector 64 0) )
   (blackKing (make-bitvector 64 0) )
   (whitePawn (make-bitvector 64 0) )
   (whiteKing (make-bitvector 64 0) )
   )
+
+
+(define (update-board board asquare piece)
+  (let ([sq (square->index asquare)])
+    (cond
+     ((equal? piece 'blackPawn)
+      (updateBlackPawn board sq)) 
+     (else board))))
+
 
 (define make-bitboard-hash
   (let ([h (make-hash-table)])
@@ -44,18 +88,6 @@
 (define (display-bitboard bb)
   (begin
    (hash-table-walk bb (lambda (k v) (print k (bitvector->string v))))))
-
-;; "a1" -> 0 "h8"-> 63
-(: square->index (string --> fixnum))
-
-(define lsquares  `(a1 a2 a3 a4 a5 a6 a7 a8 b1 b2 b3 b4 b5 b6 b7 b8 c1 c2 c3 c4 c5 c6 c7 c8 d1 d2 d3 d4 d5 d6 d7 d8 e1 e2 e3 e4 e5 e6 e7 e8 f1 f2 f3 f4 f5 f6 f7 f8 g1 g2 g3 g4 g5 g6 g7 g8 h1 h2 h3 h4 h5 h6 h7 h8))
-
- ;; 'a1 -> 0 'h8-> 63
-(: square->index (symbol --> fixnum))
-(define (square->index square)
-  (list-index (lambda (x) (equal? square x )) lsquares))
-
-
 
 (define (update-board-hash board asquare piece)
   (let ([sq (square->index asquare)])
