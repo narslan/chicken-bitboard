@@ -15,11 +15,14 @@
             (loop (cdr attr))))))
 
 (define (game-def)
-  (let (
-	[board2 (update-board (make-bb) 'a1 'blackRook)]
+  (let* (
+	[board2 (make-bb)]
+	[board3 (update-board board2 'h8 'blackRook)]
+	[board4 (update-board board3 'h7 'blackPawn)]
 	)
-    (begin
-      (pp-tree (update-board (make-bb) 'a1 'blackRook)))))
+    (pp-tree board4)
+    (pp-tree board3)
+    ))
 
 (game-def)
 ;;(game-hash)

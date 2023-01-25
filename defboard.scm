@@ -58,12 +58,14 @@
   (whiteKing (make-bitvector 64 0) )
   (whiteAll (make-bitvector 64 0) ))
 
+
 ;; functionally update 
 (define (updateBlackAll board square)
   (update-bb board blackAll: (make-func-bitvector-at square)))
 
 (define  (updateBlackPawn  board square)
-   (update-bb board blackPawn: (make-func-bitvector-at square))
+ 
+  (update-bb board blackPawn: (make-func-bitvector-at square))
    )
 
 (define  (updateBlackKnight  board square)
@@ -74,14 +76,9 @@
   (update-bb board blackBishop: (make-func-bitvector-at square))
  )
 
-(define  (updateBlackRook board square)
-  (begin
-
-    (update-bb board blackRook: (make-func-bitvector-at square))
-   
-    )
-  
- )
+(define (updateBlackRook board square)
+  (update-bb board blackRook: (make-func-bitvector-at square))
+  )
 
 (define  (updateBlackQueen  board square)
   (update-bb board blackQueen: (make-func-bitvector-at square))
@@ -94,15 +91,15 @@
 (define (update-board board asquare piece)
   (let ([sq (square->index asquare)])
     (cond
-     ((equal? piece 'blackPawn) (updateBlackPawn board sq)
-      (equal? piece 'blackKnight) (updateBlackKnight board sq)
-      (equal? piece 'blackBishop) (updateBlackBishop board sq)
-      (equal? piece 'blackRook) (updateBlackRook board sq)
-      (equal? piece 'blackQueen) (updateBlackQueen board sq)
-      (equal? piece 'blackKing) (updateBlackKing board sq)
-      ) 
-     (else board))))
-
+     [(equal? piece 'blackPawn) (updateBlackPawn board sq)]
+     [(equal? piece 'blackKnight) (updateBlackKnight board sq)]
+     [(equal? piece 'blackBishop) (updateBlackBishop board sq)]
+     [(equal? piece 'blackRook) (updateBlackRook board sq)]
+     [(equal? piece 'blackQueen) (updateBlackQueen board sq)]
+     [(equal? piece 'blackKing) (updateBlackKing board sq)]
+     [else board]
+     )))
+ 
 
 (define make-bitboard-hash
   (let ([h (make-hash-table)])
