@@ -57,30 +57,45 @@
   (whiteKing (make-bitvector 64 0) )
   (whiteAll (make-bitvector 64 0) ))
 
-(define (bbindex board)
-  (let loop ((attr (bb->alist t))
-	     
+(define (bitvector-all-bits  bvec)
+  (let ( (len (bitvector-length bvec)))
+    (let lp ((i 0)
+	     (r 0)
 	     )
-    (cond ((null? attr) 'done)
-          (else
-            (display (caar attr))
-	    (display ": ")
-            (display (bitvector->string (cdar attr)))
-	    (newline)
-            (loop (cdr attr) ))))
-  
-  )
+      (cond ((>= i len) -1)
+            ((= 1 (bitvector-ref/int bvec i)) (cons r i))
+            (else (lp (+ i 1) (+ r 1) )))
+      r
+      )
+    
+    ))
+
+
+(define (bbindex board)
+  (let loop ((attr (bb->alist board)))
+    (cond
+     ((null? attr) 'done)
+     (else
+      (let ([piece (caar attr)]
+	    [bv (cdar attr)])
+	(case piece
+	  [ 'blackPawn (display   (bitvector-all-bits  bv))]
+	  [ 'blackKnight (display 'blackKnight) ]
+	  [ 'blackBishop (display (bitvector-all-bits  bv))]
+	  [ 'blackRook (display   (bitvector-all-bits  bv))]
+	  [ 'blackQueen (display  'blackQueen)]
+	  [ 'blackKing (display   'blackKing)]
+	  [else board]))
+      (newline)
+      (loop (cdr attr) )))))
 
 ;; functionally update 
 (define (updateBlackAll board square)
-  (let ([nb (update-bb board blackAll: (set-bitvector-of (bb-blackAll board) square))])
-    nb))
+  (let ([nb (update-bb board blackAll: (set-bitvector-of (bb-blackAll board) square))])  nb))
 
 (define  (updateBlackPawn  board square)
- (let ([nb (update-bb board blackPawn: (set-bitvector-of (bb-blackPawn board) square))]
-       )
-   (updateBlackAll nb square)
-   ))
+ (let ([nb (update-bb board blackPawn: (set-bitvector-of (bb-blackPawn board) square))])
+   (updateBlackAll nb square)))
 
 (define  (updateBlackKnight  board square)
  (let ([nb (update-bb board blackKnight: (set-bitvector-of (bb-blackKnight board) square))])
