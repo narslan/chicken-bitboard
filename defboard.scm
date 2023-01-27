@@ -30,7 +30,9 @@
 
 (define rsquares  `(a1 a2 a3 a4 a5 a6 a7 a8 b1 b2 b3 b4 b5 b6 b7 b8 c1 c2 c3 c4 c5 c6 c7 c8 d1 d2 d3 d4 d5 d6 d7 d8 e1 e2 e3 e4 e5 e6 e7 e8 f1 f2 f3 f4 f5 f6 f7 f8 g1 g2 g3 g4 g5 g6 g7 g8 h1 h2 h3 h4 h5 h6 h7 h8))
 
-(define llsquares `( a1 a2 b2 c2 d2 e2 f2 g2 h2
+(define llsquares `(
+  a1 b1 c1 d1 e1 f1 g1 h1 
+  a2 b2 c2 d2 e2 f2 g2 h2
   a3 b3 c3 d3 e3 f3 g3 h3
   a4 b4 c4 d4 e4 f4 g4 h4
   a5 b5 c5 d5 e5 f5 g5 h5
@@ -69,27 +71,25 @@
 
 (define (bbindex board)
   (let loop ((attr (bb->alist board))
-	     (lst '()))
+	     (v (make-vector 64 #f))
+	     )
     (cond
-     ((null? attr) lst)
+     ((null? attr) v)
      (else
       (let* ([piece (caar attr)]
 	     [bv (cdar attr)]
 	     (bits (bitvector-all-bits  bv))
 	    )
 	(case piece
-	  ['blackAll (loop (cdr attr) lst)]
-	  ['whiteAll (loop (cdr attr) lst )]
-	  [else (loop (cdr attr) (append lst (append '()  `(,piece ,bits))) )]
-	  )
-	
-	)
-      ))))
-
-(define draw
+	  ['blackAll (loop (cdr attr)  v)]
+	  ['whiteAll (loop (cdr attr)  v)]
+	  [else (loop (cdr attr)
+		      (begin
+			(for-each (lambda (idx) (vector-set! v idx piece)) bits)
+			v
+			))]))))))
 
 
-  )
 
 ;; [ 'blackPawn (append lst  (bitvector-all-bits  bv ))]
 ;; 	  [ 'blackKnight (append  lst (bitvector-all-bits  bv )) ]
