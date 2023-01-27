@@ -57,16 +57,14 @@
   (whiteKing (make-bitvector 64 0) )
   (whiteAll (make-bitvector 64 0) ))
 
-(define (bitvector-all-bits  bvec accu)
-  (let ( (len (bitvector-length bvec)))
-    (let lp ((i 0)
-	    
-	     )
-      (cond ((>= i len) -1)
-            ((= 1 (bitvector-ref/int bvec i)) (cons accu i))
-            (else (lp (+ i 1) (+ r 1) )))
-     )))
-
+(define (bitvector-all-bits bit-vector)
+  (let ([len (bitvector-length bit-vector)])
+    (let loop ( [i 0] [acc '()])
+      (cond ((>= i len) i acc)
+            ((= (bitvector-ref/int bit-vector i) 1)
+             (loop (+ i 1) (cons i acc)))
+            (else
+             (loop (+ i 1) acc))))))
 
 (define (bbindex board)
   (let loop ((attr (bb->alist board)))
@@ -76,10 +74,10 @@
       (let ([piece (caar attr)]
 	    [bv (cdar attr)])
 	(case piece
-	  [ 'blackPawn (display   (bitvector-all-bits  bv '()))]
+	  [ 'blackPawn (display   (bitvector-all-bits  bv ))]
 	  [ 'blackKnight (display 'blackKnight) ]
-	  [ 'blackBishop (display (bitvector-all-bits  bv '()))]
-	  [ 'blackRook (display   (bitvector-all-bits  bv '() ))]
+	  [ 'blackBishop (display (bitvector-all-bits  bv ))]
+	  [ 'blackRook (display   (bitvector-all-bits  bv ))]
 	  [ 'blackQueen (display  'blackQueen)]
 	  [ 'blackKing (display   'blackKing)]
 	  [else board]))
