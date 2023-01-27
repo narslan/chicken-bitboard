@@ -126,6 +126,36 @@
   (let ([nb (update-bb board blackKing: (set-bitvector-of (bb-blackKing board) square))])
     (updateBlackAll nb square)))
 
+
+(define (updateWhiteAll board square)
+  (let ([nb (update-bb board whiteAll: (set-bitvector-of (bb-whiteAll board) square))])  nb))
+
+(define  (updateWhitePawn  board square)
+ (let ([nb (update-bb board whitePawn: (set-bitvector-of (bb-whitePawn board) square))])
+   (updateWhiteAll nb square)))
+
+(define  (updateWhiteKnight  board square)
+ (let ([nb (update-bb board whiteKnight: (set-bitvector-of (bb-whiteKnight board) square))])
+   (updateWhiteAll nb square)))
+
+(define  (updateWhiteBishop  board square)
+  (let ([nb (update-bb board whiteBishop: (set-bitvector-of (bb-whiteBishop board) square))])
+    (updateWhiteAll nb square)))
+
+(define  (updateWhiteRook  board square)
+  (let ([nb (update-bb board whiteRook: (set-bitvector-of (bb-whiteRook board) square))])
+    (updateWhiteAll nb square)))
+
+(define  (updateWhiteQueen  board square)
+  (let ([nb (update-bb board whiteQueen: (set-bitvector-of (bb-whiteQueen board) square))])
+    (updateWhiteAll nb square)))
+
+(define  (updateWhiteKing  board square)
+  (let ([nb (update-bb board whiteKing: (set-bitvector-of (bb-whiteKing board) square))])
+    (updateWhiteAll nb square)))
+
+
+
 (define (update-board board asquare piece)
   (let ([sq (square->index asquare)])
     (cond
@@ -135,6 +165,14 @@
      [(equal? piece 'blackRook) (updateBlackRook board sq)]
      [(equal? piece 'blackQueen) (updateBlackQueen board sq)]
      [(equal? piece 'blackKing) (updateBlackKing board sq)]
+
+     [(equal? piece 'whitePawn) (updateWhitePawn board sq)]
+     [(equal? piece 'whiteKnight) (updateWhiteKnight board sq)]
+     [(equal? piece 'whiteBishop) (updateWhiteBishop board sq)]
+     [(equal? piece 'whiteRook) (updateWhiteRook board sq)]
+     [(equal? piece 'whiteQueen) (updateWhiteQueen board sq)]
+     [(equal? piece 'whiteKing) (updateWhiteKing board sq)]
+
      [else board]
      )))
  
