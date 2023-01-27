@@ -52,6 +52,10 @@
   (blackAll (make-bitvector 64 0) )
   
   (whitePawn (make-bitvector 64 0) )
+  (whiteKnight (make-bitvector 64 0) )
+  (whiteBishop (make-bitvector 64 0) )
+  (whiteRook (make-bitvector 64 0) )
+  (whiteQueen (make-bitvector 64 0) )
   (whiteKing (make-bitvector 64 0) )
   (whiteAll (make-bitvector 64 0) ))
 
