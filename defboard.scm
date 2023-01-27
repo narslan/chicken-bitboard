@@ -66,23 +66,37 @@
             (else
              (loop (+ i 1) acc))))))
 
+
 (define (bbindex board)
-  (let loop ((attr (bb->alist board)))
+  (let loop ((attr (bb->alist board))
+	     (lst '()))
     (cond
-     ((null? attr) 'done)
+     ((null? attr) lst)
      (else
-      (let ([piece (caar attr)]
-	    [bv (cdar attr)])
+      (let* ([piece (caar attr)]
+	     [bv (cdar attr)]
+	     (bits (bitvector-all-bits  bv))
+	    )
 	(case piece
-	  [ 'blackPawn (display   (bitvector-all-bits  bv ))]
-	  [ 'blackKnight (display 'blackKnight) ]
-	  [ 'blackBishop (display (bitvector-all-bits  bv ))]
-	  [ 'blackRook (display   (bitvector-all-bits  bv ))]
-	  [ 'blackQueen (display  'blackQueen)]
-	  [ 'blackKing (display   'blackKing)]
-	  [else board]))
-      (newline)
-      (loop (cdr attr) )))))
+	  ['blackAll (loop (cdr attr) lst)]
+	  ['whiteAll (loop (cdr attr) lst )]
+	  [else (loop (cdr attr) (append lst (cons piece bits)) )]
+	  )
+	
+	)
+      ))))
+
+(define draw
+
+
+  )
+
+;; [ 'blackPawn (append lst  (bitvector-all-bits  bv ))]
+;; 	  [ 'blackKnight (append  lst (bitvector-all-bits  bv )) ]
+;; 	  [ 'blackBishop (append lst (bitvector-all-bits  bv ))]
+;; 	  [ 'blackRook (merge lst (bitvector-all-bits  bv ))]
+;; 	  [ 'blackQueen (append lst  (bitvector-all-bits  bv ))]
+;; 	  [ 'blackKing (append lst  (bitvector-all-bits  bv ))]
 
 ;; functionally update 
 (define (updateBlackAll board square)
