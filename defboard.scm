@@ -80,7 +80,7 @@
 	(case piece
 	  ['blackAll (loop (cdr attr) lst)]
 	  ['whiteAll (loop (cdr attr) lst )]
-	  [else (loop (cdr attr) (append lst (cons piece bits)) )]
+	  [else (loop (cdr attr) (append lst (append '()  `(,piece ,bits))) )]
 	  )
 	
 	)
