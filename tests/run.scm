@@ -30,13 +30,8 @@
 	 [board2 (make-bb)]
 	 [board3 (update-board board2 'h8 'blackRook)]
 	 [board4 (update-board board3 'h7 'blackPawn)]
-	 [board5 (update-board board4 'h6 'blackRook)]
-	 )
-    (pp-tree board5)
-    ))
-
-
-
+	 [board5 (update-board board4 'h6 'blackRook)])
+    (pp-tree board5)))
 
 (game-def)
 ;;(game-hash)

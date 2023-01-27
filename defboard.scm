@@ -51,31 +51,34 @@
 
 ;; functionally update 
 (define (updateBlackAll board square)
-  (update-bb board blackAll: (set-bitvector-at square)))
+  (let ([nb (update-bb board blackAll: (set-bitvector-of (bb-blackAll board) square))])
+    nb))
 
 (define  (updateBlackPawn  board square)
- (let ([nb (update-bb board blackPawn: (set-bitvector-of (bb-blackPawn board) square))])
-   nb))
+ (let ([nb (update-bb board blackPawn: (set-bitvector-of (bb-blackPawn board) square))]
+       )
+   (updateBlackAll nb square)
+   ))
 
 (define  (updateBlackKnight  board square)
- (let ([nb (update-bb board blackKnight: (set-bitvector-at square))])
-   nb))
+ (let ([nb (update-bb board blackKnight: (set-bitvector-of (bb-blackKnight board) square))])
+   (updateBlackAll nb square)))
 
 (define  (updateBlackBishop  board square)
-  (let ([nb (update-bb board blackBishop: (set-bitvector-at square))])
-    nb))
+  (let ([nb (update-bb board blackBishop: (set-bitvector-of (bb-blackBishop board) square))])
+    (updateBlackAll nb square)))
 
 (define  (updateBlackRook  board square)
   (let ([nb (update-bb board blackRook: (set-bitvector-of (bb-blackRook board) square))])
-    nb))
+    (updateBlackAll nb square)))
 
 (define  (updateBlackQueen  board square)
-  (let ([nb (update-bb board blackQueen: (set-bitvector-at square))])
-    nb))
+  (let ([nb (update-bb board blackQueen: (set-bitvector-at (bb-blackQueen board) square))])
+    (updateBlackAll nb square)))
 
 (define  (updateBlackKing  board square)
-  (let ([nb (update-bb board blackKing: (set-bitvector-at square))])
-    nb))
+  (let ([nb (update-bb board blackKing: (set-bitvector-at (bb-blackKing board) square))])
+    (updateBlackAll nb square)))
 
 
 (define (update-board board asquare piece)
@@ -88,7 +91,9 @@
      [(equal? piece 'blackQueen) (updateBlackQueen board sq)]
      [(equal? piece 'blackKing) (updateBlackKing board sq)]
      [else board]
-     )))
+     )
+    
+    ))
  
 
 (define make-bitboard-hash
