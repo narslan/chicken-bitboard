@@ -90,100 +90,115 @@
 		      (begin
 			(for-each (lambda (idx) (vector-set! v idx piece)) bits) v))]))))))
 
-;; [ 'blackPawn (append lst  (bitvector-all-bits  bv ))]
-;; 	  [ 'blackKnight (append  lst (bitvector-all-bits  bv )) ]
-;; 	  [ 'blackBishop (append lst (bitvector-all-bits  bv ))]
-;; 	  [ 'blackRook (merge lst (bitvector-all-bits  bv ))]
-;; 	  [ 'blackQueen (append lst  (bitvector-all-bits  bv ))]
-;; 	  [ 'blackKing (append lst  (bitvector-all-bits  bv ))]
-
 ;; functionally update 
-(define (updateBlackAll board square)
-  (let ([nb (update-bb board blackAll: (set-bitvector-of (bb-blackAll board) square))])  nb))
-
-(define  (updateBlackPawn  board square)
- (let ([nb (update-bb board blackPawn: (set-bitvector-of (bb-blackPawn board) square))])
-   (updateBlackAll nb square)))
-
-(define  (updateBlackKnight  board square)
- (let ([nb (update-bb board blackKnight: (set-bitvector-of (bb-blackKnight board) square))])
-   (updateBlackAll nb square)))
-
-(define  (updateBlackBishop  board square)
-  (let ([nb (update-bb board blackBishop: (set-bitvector-of (bb-blackBishop board) square))])
-    (updateBlackAll nb square)))
-
-(define  (updateBlackRook  board square)
-  (let ([nb (update-bb board blackRook: (set-bitvector-of (bb-blackRook board) square))])
-    (updateBlackAll nb square)))
-
-(define  (updateBlackQueen  board square)
-  (let ([nb (update-bb board blackQueen: (set-bitvector-of (bb-blackQueen board) square))])
-    (updateBlackAll nb square)))
-
-(define  (updateBlackKing  board square)
-  (let ([nb (update-bb board blackKing: (set-bitvector-of (bb-blackKing board) square))])
-    (updateBlackAll nb square)))
-
-
-(define (updateWhiteAll board square)
-  (let ([nb (update-bb board whiteAll: (set-bitvector-of (bb-whiteAll board) square))])  nb))
-
-(define  (updateWhitePawn  board square)
- (let ([nb (update-bb board whitePawn: (set-bitvector-of (bb-whitePawn board) square))])
-   (updateWhiteAll nb square)))
-
-(define  (updateWhiteKnight  board square)
- (let ([nb (update-bb board whiteKnight: (set-bitvector-of (bb-whiteKnight board) square))])
-   (updateWhiteAll nb square)))
-
-(define  (updateWhiteBishop  board square)
-  (let ([nb (update-bb board whiteBishop: (set-bitvector-of (bb-whiteBishop board) square))])
-    (updateWhiteAll nb square)))
-
-(define  (updateWhiteRook  board square)
-  (let ([nb (update-bb board whiteRook: (set-bitvector-of (bb-whiteRook board) square))])
-    (updateWhiteAll nb square)))
-
-(define  (updateWhiteQueen  board square)
-  (let ([nb (update-bb board whiteQueen: (set-bitvector-of (bb-whiteQueen board) square))])
-    (updateWhiteAll nb square)))
-
-(define  (updateWhiteKing  board square)
-  (let ([nb (update-bb board whiteKing: (set-bitvector-of (bb-whiteKing board) square))])
-    (updateWhiteAll nb square)))
-
-(define  (updateWhiteKing2  board square #!optional oldSquare)
+(define (updateBlackAll board square #!optional oldSquare)
   (let ([nb (update-bb
 	     board
-	     whiteKing: (nullify-at-bitvector-of (set-bitvector-of (bb-whiteKing board) square) oldSquare)
-	     
+	     blackAll: (nullify-at-bitvector-of (set-bitvector-of (bb-blackAll board) square) oldSquare) )])  nb))
 
-	     )]
+(define  (updateBlackPawn board square #!optional oldSquare)
+  (let ([nb (update-bb
+	    board
+	    blackPawn: (nullify-at-bitvector-of (set-bitvector-of (bb-blackPawn board) square) oldSquare) )])
+   (updateBlackAll nb square oldSquare)))
 
-	     )
+(define  (updateBlackKnight  board square #!optional oldSquare)
+ (let ([nb (update-bb
+	    board
+	    blackKnight: (nullify-at-bitvector-of (set-bitvector-of (bb-blackKnight board) square) oldSquare) )])
+   (updateBlackAll nb square oldSquare)))
+
+(define  (updateBlackBishop  board square #!optional oldSquare)
+  (let ([nb (update-bb
+	     board
+	     blackBishop: (nullify-at-bitvector-of (set-bitvector-of (bb-blackBishop board) square) oldSquare) )])
+    (updateBlackAll nb square oldSquare)))
+
+(define  (updateBlackRook  board square #!optional oldSquare)
+  (let ([nb (update-bb
+	     board
+	     blackRook: (nullify-at-bitvector-of (set-bitvector-of (bb-blackRook board) square) oldSquare) 
+	     )])
+    (updateBlackAll nb square oldSquare)))
+
+(define  (updateBlackQueen  board square #!optional oldSquare)
+  (let ([nb (update-bb
+	     board
+	     blackQueen:
+	     (nullify-at-bitvector-of (set-bitvector-of (bb-blackQueen board) square) oldSquare) 
+	     )])
+    (updateBlackAll nb square oldSquare)))
+
+(define  (updateBlackKing  board square #!optional oldSquare)
+  (let ([nb (update-bb
+	     board
+	     blackKing: (nullify-at-bitvector-of (set-bitvector-of (bb-blackKing board) square) oldSquare) )])
+    (updateBlackAll nb square oldSquare)))
 
 
-	    (updateWhiteAll nb square)))
+(define (updateWhiteAll board square #!optional oldSquare)
+  (let ([nb (update-bb
+	     board
+	     whiteAll: (nullify-at-bitvector-of (set-bitvector-of (bb-blackAll board) square) oldSquare) )])  nb))
+
+(define  (updateWhitePawn  board square #!optional oldSquare)
+ (let ([nb (update-bb
+	    board
+	    whitePawn: (nullify-at-bitvector-of (set-bitvector-of (bb-whitePawn board) square) oldSquare) )])
+   (updateWhiteAll nb square oldSquare)))
+
+(define  (updateWhiteKnight  board square #!optional oldSquare)
+ (let ([nb (update-bb
+	    board
+	    whiteKnight: (nullify-at-bitvector-of (set-bitvector-of (bb-whiteKnight board) square) oldSquare)
+		      )])
+   (updateWhiteAll nb square oldSquare)))
+
+(define  (updateWhiteBishop  board square #!optional oldSquare)
+  (let ([nb (update-bb
+	     board
+	     whiteBishop: (nullify-at-bitvector-of (set-bitvector-of (bb-whiteBishop board) square) oldSquare)
+	    )])
+    (updateWhiteAll nb square oldSquare)))
+
+(define  (updateWhiteRook  board square #!optional oldSquare)
+  (let ([nb (update-bb
+	     board
+	     whiteRook: (nullify-at-bitvector-of (set-bitvector-of (bb-whiteRook board) square) oldSquare))])
+    (updateWhiteAll nb square oldSquare)))
+
+(define  (updateWhiteQueen  board square #!optional oldSquare)
+  (let ([nb (update-bb
+	     board
+	     whiteQueen: (nullify-at-bitvector-of (set-bitvector-of (bb-whiteQueen board) square) oldSquare)
+	     )])
+    (updateWhiteAll nb square oldSquare)))
+
+
+(define  (updateWhiteKing  board square #!optional oldSquare)
+  (let ([nb (update-bb
+	     board
+	     whiteKing: (nullify-at-bitvector-of (set-bitvector-of (bb-whiteKing board) square) oldSquare))])
+    (updateWhiteAll nb square)))
 
 (define (update-board board newSquare piece #!optional oldSquare)
   (let ([sq (square->index newSquare)]
 	[osq (square->index oldSquare)]
 	)
     (cond
-     [(equal? piece 'blackPawn) (updateBlackPawn board sq)]
-     [(equal? piece 'blackKnight) (updateBlackKnight board sq)]
-     [(equal? piece 'blackBishop) (updateBlackBishop board sq)]
-     [(equal? piece 'blackRook) (updateBlackRook board sq)]
-     [(equal? piece 'blackQueen) (updateBlackQueen board sq)]
-     [(equal? piece 'blackKing) (updateBlackKing board sq)]
+     [(equal? piece 'blackPawn) (updateBlackPawn board sq osq)]
+     [(equal? piece 'blackKnight) (updateBlackKnight board sq osq)]
+     [(equal? piece 'blackBishop) (updateBlackBishop board sq osq)]
+     [(equal? piece 'blackRook) (updateBlackRook board sq osq)]
+     [(equal? piece 'blackQueen) (updateBlackQueen board sq osq)]
+     [(equal? piece 'blackKing) (updateBlackKing board sq osq)]
 
-     [(equal? piece 'whitePawn) (updateWhitePawn board sq)]
-     [(equal? piece 'whiteKnight) (updateWhiteKnight board sq)]
-     [(equal? piece 'whiteBishop) (updateWhiteBishop board sq)]
-     [(equal? piece 'whiteRook) (updateWhiteRook board sq)]
-     [(equal? piece 'whiteQueen) (updateWhiteQueen board sq)]
-     [(equal? piece 'whiteKing) (updateWhiteKing2 board sq osq)]
+     [(equal? piece 'whitePawn) (updateWhitePawn board sq osq)]
+     [(equal? piece 'whiteKnight) (updateWhiteKnight board sq osq)]
+     [(equal? piece 'whiteBishop) (updateWhiteBishop board sq osq)]
+     [(equal? piece 'whiteRook) (updateWhiteRook board sq osq)]
+     [(equal? piece 'whiteQueen) (updateWhiteQueen board sq osq)]
+     [(equal? piece 'whiteKing) (updateWhiteKing board sq osq)]
 
      [else board]
      )))
