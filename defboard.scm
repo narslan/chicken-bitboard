@@ -185,20 +185,20 @@
   (let ([sq (square->index newSquare)]
 	[osq (square->index oldSquare)]
 	)
-    (cond
-     [(equal? piece 'blackPawn) (updateBlackPawn board sq osq)]
-     [(equal? piece 'blackKnight) (updateBlackKnight board sq osq)]
-     [(equal? piece 'blackBishop) (updateBlackBishop board sq osq)]
-     [(equal? piece 'blackRook) (updateBlackRook board sq osq)]
-     [(equal? piece 'blackQueen) (updateBlackQueen board sq osq)]
-     [(equal? piece 'blackKing) (updateBlackKing board sq osq)]
+    (case piece
+     ['blackPawn  (updateBlackPawn board sq osq)]
+     ['blackKnight  (updateBlackKnight board sq osq)]
+     ['blackBishop (updateBlackBishop board sq osq)]
+     ['blackRook (updateBlackRook board sq osq)]
+     ['blackQueen (updateBlackQueen board sq osq)]
+     ['blackKing (updateBlackKing board sq osq)]
 
-     [(equal? piece 'whitePawn) (updateWhitePawn board sq osq)]
-     [(equal? piece 'whiteKnight) (updateWhiteKnight board sq osq)]
-     [(equal? piece 'whiteBishop) (updateWhiteBishop board sq osq)]
-     [(equal? piece 'whiteRook) (updateWhiteRook board sq osq)]
-     [(equal? piece 'whiteQueen) (updateWhiteQueen board sq osq)]
-     [(equal? piece 'whiteKing) (updateWhiteKing board sq osq)]
+     ['whitePawn (updateWhitePawn board sq osq)]
+     ['whiteKnight (updateWhiteKnight board sq osq)]
+     ['whiteBishop (updateWhiteBishop board sq osq)]
+     ['whiteRook (updateWhiteRook board sq osq)]
+     ['whiteQueen (updateWhiteQueen board sq osq)]
+     ['whiteKing (updateWhiteKing board sq osq)]
 
      [else board]
      )))
