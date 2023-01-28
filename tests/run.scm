@@ -33,12 +33,9 @@
 			     ['whiteRook (display " ♖ ")]
 			     ['whiteQueen (display " ♕ ")]
 			     ['whiteKing (display " ♔ ")]
-			     [else (display " - ")]
-			     )
-			   (if
-			    (equal? (modulo (+ i 1) 8) 0)
-			    (newline)
-			    )))
+			     [else (display " - ")])
+			   (if (equal? (modulo (+ i 1) 8) 0)
+			       (newline))))
 		   board-vec))
 
 (define start-pos
@@ -74,40 +71,28 @@
     (e7 blackPawn)
     (f7 blackPawn)
     (g7 blackPawn)
-    (h7 blackPawn)
+    (h7 blackPawn)))
 
-    
-    ))
-
-(define (new-game bitboard)  (let loop (
-	     [pos start-pos]
-	     [board bitboard]
-	     )
+(define (new-game bitboard)
+  (let loop ([pos start-pos]
+	     [board bitboard])
     (cond
      ((null? pos) board)
-     (else (loop (cdr pos) (update-board board (caar pos) (cadar pos)) 
-
-		 )))))
-;(time  (make-bb))
-;(time (bbindex (new-game (make-bb))))
-(time (draw-board (bbindex (new-game (make-bb)))))
-
-;;(update-board board (car pos) (cadr pos))
-;; (define (game-def)
-;;   (let* (
-;; 	 [board2 (make-bb)]
-;; 	 [board3 (update-board board2 'a1 'blackRook)]
-;; 	 [board4 (update-board board3 'h1 'blackPawn)]
-;; 	 [board5 (update-board board4 'e1 'blackKing)]
-;; 	 [board6 (update-board board5 'h8 'blackKnight) ]
-;; 	 [board7 (update-board board6 'e2 'blackQueen)]
-;; 	 [board8 (update-board board7 'e4 'blackPawn)]
-;; 	 )
-;;     (draw-vec (bbindex board8))))
+     (else (loop (cdr pos) (update-board board (caar pos) (cadar pos)) )))))
 
 
-					;(new-game)
-;;(game-hash)
+;;(time (draw-board (bbindex (new-game (make-bb)))))
+(time (draw-board (bbindex (update-board (new-game (make-bb)) 'e5 'whiteKing  'e1)  )))
+
+
+;; (print (bitvector->string
+;; 	(set-bitvector-of (make-bitvector 64 0 ) 1) ))
+;; (print (bitvector->string
+;; 	(null-bitvector-at  1) ))
+(print (bitvector->string
+	(nullify-at-bitvector-of (set-bitvector-of (make-bitvector 64 0 ) 2) 2 )))
+
+
 (test-exit)
 
 
