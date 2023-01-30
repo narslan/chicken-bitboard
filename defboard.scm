@@ -6,7 +6,6 @@
   (chicken string)
   (only srfi-1 list-index)
   srfi-178 ;; bitvectors
-  srfi-69 ;; hash tables
   )
 
 ;;builds a new bit vector with id-th index set 1.
@@ -41,7 +40,7 @@
 			     a2 b2 c2 d2 e2 f2 g2 h2
 			     a1 b1 c1 d1 e1 f1 g1 h1))
 
-;; 'a1 -> 0 'h8-> 63
+
 (: square->index (symbol --> fixnum))
 (define (square->index square)
   (list-index (lambda (x) (equal? square x )) all-square-symbols))
@@ -84,7 +83,7 @@
 	     [bv (cdar attr)]
 	     (bits (bitvector-all-bits  bv)))
 	(case piece
-	  ['blackAll (loop (cdr attr)  v)]
+	  ['blackAll (loop (cdr attr)  v)] 
 	  ['whiteAll (loop (cdr attr)  v)]
 	  [else (loop (cdr attr)
 		      (begin
@@ -183,8 +182,7 @@
 
 (define (update-board board newSquare piece #!optional oldSquare)
   (let ([sq (square->index newSquare)]
-	[osq (square->index oldSquare)]
-	)
+	[osq (square->index oldSquare)])
     (case piece
      ['blackPawn  (updateBlackPawn board sq osq)]
      ['blackKnight  (updateBlackKnight board sq osq)]
@@ -199,7 +197,6 @@
      ['whiteRook (updateWhiteRook board sq osq)]
      ['whiteQueen (updateWhiteQueen board sq osq)]
      ['whiteKing (updateWhiteKing board sq osq)]
-
      [else board]
      )))
  

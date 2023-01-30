@@ -89,9 +89,6 @@
 ;; 	(set-bitvector-of (make-bitvector 64 0 ) 1) ))
 ;; (print (bitvector->string
 ;; 	(null-bitvector-at  1) ))
-(print (bitvector->string
-	(nullify-at-bitvector-of (set-bitvector-of (make-bitvector 64 0 ) 2) 2 )))
-
 
 (test-exit)
 
