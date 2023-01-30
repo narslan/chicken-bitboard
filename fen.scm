@@ -1,8 +1,6 @@
 (import test
 	(prefix abnf abnf:) 
-	(prefix abnf-consumers abnf:)
-
-	)
+	(prefix abnf-consumers abnf:))
 
 
 (define :? abnf:optional-sequence)
@@ -16,7 +14,7 @@
 ;; r1bk2qr/1pp5/p1n2b2/4pp1p/QPPP4/3n2PP/P2BqP1K/R1R5 w - - 2 23
 ;; 4k3/3p2p1/8/pP6/4P2P/8/8/4K3 w - a6 0 5
 ;; 4k3/6p1/8/pP1pP3/7P/8/8/4K3 w - d6 0 6
-(define piece  (abnf:set-from-string "KNRBQknrbqpP12345678" ))
+(define piece  (abnf:set-from-string "KNRBQPknrbqp12345678" ))
 (define side   (abnf:bind-consumed->string (abnf:set-from-string "wb" )))
 
 (define castling-right  (abnf:bind-consumed->string
@@ -24,6 +22,7 @@
 			  (:+ (abnf:set-from-string "KQkq" ))
 			  (abnf:char #\-))))
 
+;;TODO: narrow the character range of en passant macher.
 (define enpassant (abnf:bind-consumed->string
 		   (abnf:alternatives
 		    (abnf:repetition-n 2 (abnf:set-from-string "abcdefgh12345678" ))  (abnf:char #\-))))
@@ -45,7 +44,7 @@
    (abnf:repetition-n 7
 		      (abnf:concatenation
 		       piece-placement
-		       (abnf:char #\/)))
+		       (:! (abnf:char #\/))))
    piece-placement))
 
 (define fen-record
@@ -60,8 +59,7 @@
    abnf:wsp
    half-move
    abnf:wsp
-   full-move
-   ))
+   full-move))
 
 (define (string->input-stream s) (string->list s))
 (define (err s)
@@ -72,7 +70,7 @@
 ;return a list of games 
 (define (make-fen-parser s)
   (let
-      ([p (fen-record (compose reverse car) err `(() ,(string->input-stream s)))])
-    (print p)))
+      ([p (board-positions (compose reverse car) err `(() ,(string->input-stream s)))])
+    p))
 
 (print (make-fen-parser "r1bqkb1r/ppp1n2p/2n2p2/3pp1p1/Q3P3/2PP1N2/PP2BPPP/RNB2RK1 b kq - 1 7"))
