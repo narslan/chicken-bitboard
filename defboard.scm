@@ -197,6 +197,5 @@
      ['whiteRook (updateWhiteRook board sq osq)]
      ['whiteQueen (updateWhiteQueen board sq osq)]
      ['whiteKing (updateWhiteKing board sq osq)]
-     [else board]
-     )))
+     [else board] )))
  
