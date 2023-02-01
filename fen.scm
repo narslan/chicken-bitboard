@@ -1,6 +1,8 @@
 (import test
 	(prefix abnf abnf:) 
-	(prefix abnf-consumers abnf:))
+	(prefix abnf-consumers abnf:)
+	(only srfi-1 make-list fold append-map)
+	)
 
 (include "defboard.scm")
 
@@ -78,15 +80,25 @@
 		       (:! (abnf:char #\/))))
    piece-placement))
 
-;;return a list of games 
+;; We turn a fen board field string, the first eight fields, into a list of characters. 
+;; The characters are converted to one character string each by (make-string 1 c).
+;; If the character is a number n, then a list equal to length n will be produced.
+;; The letters (prnbqkPRNBQK) stand for chess pieces.
+;; Parsed fen strings will be mapped onto a 64 length string.
+;; input:  rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR 
+;; output: rnbqkbnrpppppppp--------------------------------PPPPPPPPRNBQKBNR		   
 (define (make-fen-parser s)
-  (let*
-      ([positions (board-positions (compose reverse car) err `(() ,(string->input-stream s)))]
-       [position-chars (string->input-stream (car positions))])
-    (for-each (lambda (c) (print (string->number (make-string 1 c)))) position-chars)
+  (let* ([positions (board-positions car err `(() ,(string->input-stream s)))] ;; parsed string 
+	 [position-chars (string->input-stream (car positions))]) ;;produce a list of character from a field
+    (map (lambda (x y) (cons x y) )  ;;associate squares with pieces  
+	      (append-map
+	       (lambda (c)
+		 (let ([empty-squares (string->number (make-string 1 c))])  
+		   (if empty-squares
+		       (make-list empty-squares '-)
+		       (cons c '())))) position-chars)
+	      all-square-symbols
+	      ))) ;;
 
-    
-
-    ))
 ;;(print all-square-symbols)
-(make-fen-parser "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+(for-each print (make-fen-parser "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"))
