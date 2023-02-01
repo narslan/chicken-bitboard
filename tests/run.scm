@@ -16,27 +16,29 @@
             (display (bitvector->string (cdar attr)))(newline)
             (loop (cdr attr))))))
 
+;; TODO: this needs bbindex, unite them together.
 (define (draw-board board-vec)
   (vector-for-each (lambda (i x)
 		     (begin
-			   (case x
-			     ['blackPawn (display " ♟ ")]
-			     ['blackKnight (display " ♞ ")]
-			     ['blackBishop (display " ♝ ")]
-			     ['blackRook (display " ♜ ")]
-			     ['blackQueen (display " ♛ ")]
-			     ['blackKing (display " ♚ ")]
+		       (case x
+			 ['blackPawn (display " ♟ ")]
+			 ['blackKnight (display " ♞ ")]
+			 ['blackBishop (display " ♝ ")]
+			 ['blackRook (display " ♜ ")]
+			 ['blackQueen (display " ♛ ")]
+			 ['blackKing (display " ♚ ")]
 
-			     ['whitePawn (display " ♙ ")]
-			     ['whiteKnight (display " ♘ ")]
-			     ['whiteBishop (display " ♗ ")]
-			     ['whiteRook (display " ♖ ")]
-			     ['whiteQueen (display " ♕ ")]
-			     ['whiteKing (display " ♔ ")]
-			     [else (display " - ")])
-			   (if (equal? (modulo (+ i 1) 8) 0)
-			       (newline))))
+			 ['whitePawn (display " ♙ ")]
+			 ['whiteKnight (display " ♘ ")]
+			 ['whiteBishop (display " ♗ ")]
+			 ['whiteRook (display " ♖ ")]
+			 ['whiteQueen (display " ♕ ")]
+			 ['whiteKing (display " ♔ ")]
+			 [else (display " - ")])
+		       (if (equal? (modulo (+ i 1) 8) 0)
+			   (newline))))
 		   board-vec))
+
 
 (define start-pos
   `((a1 whiteRook)

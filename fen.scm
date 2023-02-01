@@ -2,6 +2,7 @@
 	(prefix abnf abnf:) 
 	(prefix abnf-consumers abnf:)
 	(only srfi-1 make-list fold append-map)
+	srfi-69 ;; hash-tables
 	)
 
 (include "defboard.scm")
@@ -80,6 +81,23 @@
 		       (:! (abnf:char #\/))))
    piece-placement))
 
+(define fen-symbols-list
+  `((p blackPawn)
+    (n blackKnight)
+    (b blackBishop)
+    (r blackRook)
+    (q blackQueen)
+    (k blackKnight)
+
+    (P whitePawn)
+    (N whiteKnight)
+    (B whiteBishop)
+    (R whiteRook)
+    (Q whiteQueen)
+    (K whiteKnight))
+  )
+
+(define fen-symbols-lookup (alist->hash-table fen-symbols-list) )
 ;; We turn a fen board field string, the first eight fields, into a list of characters. 
 ;; The characters are converted to one character string each by (make-string 1 c).
 ;; If the character is a number n, then a list equal to length n will be produced.
@@ -87,18 +105,26 @@
 ;; Parsed fen strings will be mapped onto a 64 length string.
 ;; input:  rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR 
 ;; output: rnbqkbnrpppppppp--------------------------------PPPPPPPPRNBQKBNR		   
-(define (make-fen-parser s)
+(define (parse-fen s)
   (let* ([positions (board-positions car err `(() ,(string->input-stream s)))] ;; parsed string 
 	 [position-chars (string->input-stream (car positions))]) ;;produce a list of character from a field
-    (map (lambda (x y) (cons x y) )  ;;associate squares with pieces  
-	      (append-map
-	       (lambda (c)
-		 (let ([empty-squares (string->number (make-string 1 c))])  
-		   (if empty-squares
-		       (make-list empty-squares '-)
-		       (cons c '())))) position-chars)
-	      all-square-symbols
-	      ))) ;;
+    (map (lambda (x y) (cons x y) ) ;;associate squares with pieces  
+	 (append-map
+	  (lambda (c)
+	    (let ([empty-squares (string->number (make-string 1 c))])  
+	      (if empty-squares
+		  (make-list empty-squares '-)
+		  (cons c '())))) position-chars)
+	 all-square-symbols))) ;;
 
+
+(define (build-board-from-fen s)
+  (let ([f (parse-fen s)]
+	[boardfen (make-bb)])  ;;bitboardfrom fen
+    (begin
+      (for-each (lambda (x) )  f )
+      
+      )))
 ;;(print all-square-symbols)
-(for-each print (make-fen-parser "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"))
+;;(for-each print (make-fen-parser "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"))
+
