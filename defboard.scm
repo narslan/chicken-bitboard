@@ -6,6 +6,7 @@
   (chicken string)
   (only srfi-1 list-index)
   srfi-178 ;; bitvectors
+  	(only vector-lib vector-for-each) ; vector library
   )
 
 ;;builds a new bit vector with id-th index set 1.
@@ -72,22 +73,7 @@
              (loop (+ i 1) acc))))))
 
 
-;; bbindex maps pieces to their indices ... 
-(define (bbindex board)
-  (let loop ((attr (bb->alist board))
-	     (v (make-vector 64 #f)))
-    (cond
-     ((null? attr) v)
-     (else
-      (let* ([piece (caar attr)]
-	     [bv (cdar attr)]
-	     (bits (bitvector-all-bits  bv)))
-	(case piece
-	  ['blackAll (loop (cdr attr)  v)] 
-	  ['whiteAll (loop (cdr attr)  v)]
-	  [else (loop (cdr attr)
-		      (begin
-			(for-each (lambda (idx) (vector-set! v idx piece)) bits) v))]))))))
+
 
 ;; functionally update 
 (define (updateBlackAll board square #!optional oldSquare)
@@ -199,3 +185,42 @@
      ['whiteKing (updateWhiteKing board sq osq)]
      [else board] )))
  
+;; bbindex maps pieces to their indices ... 
+(define (bbindex board)
+  (let loop ((attr (bb->alist board))
+	     (v (make-vector 64 #f)))
+    (cond
+     ((null? attr) v)
+     (else
+      (let* ([piece (caar attr)]
+	     [bv (cdar attr)]
+	     (bits (bitvector-all-bits  bv)))
+	(case piece
+	  ['blackAll (loop (cdr attr)  v)] 
+	  ['whiteAll (loop (cdr attr)  v)]
+	  [else (loop (cdr attr)
+		      (begin
+			(for-each (lambda (idx) (vector-set! v idx piece)) bits) v))]))))))
+
+;; TODO: this needs bbindex, unite them together.
+(define (draw-board board-vec)
+  (vector-for-each (lambda (i x)
+		     (begin
+		       (case x
+			 ['blackPawn (display " ♟ ")]
+			 ['blackKnight (display " ♞ ")]
+			 ['blackBishop (display " ♝ ")]
+			 ['blackRook (display " ♜ ")]
+			 ['blackQueen (display " ♛ ")]
+			 ['blackKing (display " ♚ ")]
+
+			 ['whitePawn (display " ♙ ")]
+			 ['whiteKnight (display " ♘ ")]
+			 ['whiteBishop (display " ♗ ")]
+			 ['whiteRook (display " ♖ ")]
+			 ['whiteQueen (display " ♕ ")]
+			 ['whiteKing (display " ♔ ")]
+			 [else (display " - ")])
+		       (if (equal? (modulo (+ i 1) 8) 0)
+			   (newline))))
+		   board-vec))

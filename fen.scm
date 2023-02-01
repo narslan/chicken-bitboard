@@ -81,23 +81,7 @@
 		       (:! (abnf:char #\/))))
    piece-placement))
 
-(define fen-symbols-list
-  `((p blackPawn)
-    (n blackKnight)
-    (b blackBishop)
-    (r blackRook)
-    (q blackQueen)
-    (k blackKnight)
 
-    (P whitePawn)
-    (N whiteKnight)
-    (B whiteBishop)
-    (R whiteRook)
-    (Q whiteQueen)
-    (K whiteKnight))
-  )
-
-(define fen-symbols-lookup (alist->hash-table fen-symbols-list) )
 ;; We turn a fen board field string, the first eight fields, into a list of characters. 
 ;; The characters are converted to one character string each by (make-string 1 c).
 ;; If the character is a number n, then a list equal to length n will be produced.
@@ -113,18 +97,57 @@
 	  (lambda (c)
 	    (let ([empty-squares (string->number (make-string 1 c))])  
 	      (if empty-squares
-		  (make-list empty-squares '-)
+		  (make-list empty-squares #f)
 		  (cons c '())))) position-chars)
 	 all-square-symbols))) ;;
 
+;; TODO: I should get rid of the following.
+;; converting a character to a symbol:
+(define (char->symbol ch)
+  (string->symbol (string ch)))
 
+
+(define fen-symbols-table
+  (let* ([lst `((p . blackPawn)
+		(n . blackKnight)
+		(b . blackBishop)
+		(r . blackRook)
+		(q . blackQueen)
+		(k . blackKing)
+		
+		(P . whitePawn)
+		(N . whiteKnight)
+		(B . whiteBishop)
+		(R . whiteRook)
+		(Q . whiteQueen)
+		(K . whiteKing))])
+    (alist->hash-table lst)))
+
+(define (fen-symbols-lookup sym)
+  (hash-table-ref fen-symbols-table sym))
+
+; (update-board boardfen (fen-symbols-lookup (car p)) (cdr p) )
 (define (build-board-from-fen s)
-  (let ([f (parse-fen s)]
-	[boardfen (make-bb)])  ;;bitboardfrom fen
-    (begin
-      (for-each (lambda (x) )  f )
-      
-      )))
-;;(print all-square-symbols)
-;;(for-each print (make-fen-parser "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"))
+  (let loop ([pos (parse-fen s)]
+	     [boardfen (make-bb)]) ;;bitboard from fen
+    (cond
+     ((null? pos) boardfen)
+     ((and (caar pos)) (loop (cdr pos) (update-board boardfen (cdar pos) (fen-symbols-lookup (char->symbol (caar pos))) )))
+     
+     (else (loop (cdr pos) boardfen)))))
 
+
+(time (draw-board (bbindex (build-board-from-fen "4k3/3p2p1/8/pP6/4P2P/8/8/4K3 w - a6 0 5"))))
+
+(time (draw-board (bbindex (build-board-from-fen "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"))))
+
+(time (draw-board (bbindex (build-board-from-fen "r1bk2qr/1pp5/p1n2b2/4pp1p/QPPP4/3n2PP/P2BqP1K/R1R5 w - - 2 23"))))
+
+(time (draw-board (bbindex (build-board-from-fen "r1bk2qr/1pp5/p1n2b2/4pp1p/QPPP4/3n2PP/P2BqP1K/R1R5 w - - 2 23"))))
+
+
+;; rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1
+;; r1bqkb1r/ppp1n2p/2n2p2/3pp1p1/Q3P3/2PP1N2/PP2BPPP/RNB2RK1 b kq - 1 7
+;; r1bk2qr/1pp5/p1n2b2/4pp1p/QPPP4/3n2PP/P2BqP1K/R1R5 w - - 2 23
+;; 4k3/3p2p1/8/pP6/4P2P/8/8/4K3 w - a6 0 5
+;; 4k3/6p1/8/pP1pP3/7P/8/8/4K3 w - d6 0 6
