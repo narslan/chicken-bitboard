@@ -5,20 +5,20 @@
   (only srfi-1 list-index)
   srfi-178 ;; bitvectors
 	test
-	(only vector-lib vector-for-each) ; vector library
+	(only vector-lib vector-for-each) ;; vector library
   )
 
 ;;builds a new bit vector with id-th index set 1.
 (define (set-bitvector-at id )
   (bitvector-unfold (lambda (_ b)
 		      (values (if (equal? _ id) (not b) b) b))
-		    64
+										64
                     #f))
 
 (define (null-bitvector-at id )
   (bitvector-unfold (lambda (_ b)
 		      (values (if (equal? _ id) (not b) b) b))
-		    64
+										64
                     #t))
 
 ;;builds a new bit vector from another bit vector while index id of vector is set to 1
