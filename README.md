@@ -8,6 +8,6 @@
   * Move pieces
 
 ```scheme
-  (draw-board (bbindex (build-board-from-fen "4k3/3p2p1/8/pP6/4P2P/8/8/4K3 w - a6 0 5")))
+(draw-board (bbindex (build-board-from-fen "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR")))
 ```
 ![sample](sample.pgn)
