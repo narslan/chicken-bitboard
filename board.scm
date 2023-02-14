@@ -8,7 +8,7 @@
   (only vector-lib vector-for-each) ;; vector library
   )
 
-;;builds a new bit vector with id-th index set 1.
+;;builds a new bit vector with id-th index set to 1.
 (define (set-bitvector-at id )
   (bitvector-unfold (lambda (_ b)
 		      (values (if (equal? _ id) (not b) b) b))
@@ -171,6 +171,7 @@
       [else board] )))
 
 ;; bitvector-all-bits create a list of indices from bit-vector.
+;; bitvector [0 1 0 0 1] returns (0 3)
 (define (bitvector-all-bits bit-vector)
   (let ([len (bitvector-length bit-vector)])
     (let loop ( [i 0] [acc '()])
@@ -198,7 +199,7 @@
 		      (begin
 			(for-each (lambda (idx) (vector-set! v idx piece)) bits) v))]))))))
 
-
+;; this procedure requires bbindex
 (define (draw-board board-vec)
   (vector-for-each
    (lambda (i x)
