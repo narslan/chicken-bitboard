@@ -1,6 +1,6 @@
 (import test)
 
-(include-relative "../defboard.scm")
+(include-relative "../board.scm")
 
 
 (define (pp-tree t)

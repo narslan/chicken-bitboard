@@ -1,59 +1,48 @@
 (import
-	srfi-178
-	(chicken random)
-	(only vector-lib vector-for-each vector-unfold) 
-	)
+  srfi-178
+  (chicken random)
+  (only vector-lib vector-for-each vector-unfold) 
+  )
 
-;; 1. Generate and fill 64 x 12 array
-;; 
-
+(include "fen.scm")
+;; 1. Generate a 64 x 12 array
 
 ;;builds a new bit vector with random value.
 (define (generate-random-bits)
-	(bitvector-unfold (lambda (_) (pseudo-random-integer 2)) 64))
+  (bitvector-unfold (lambda (_) (pseudo-random-integer 2)) 64))
 
-(define (vec-sq-helper-rand new old index)
-  (if (< index 0)
-      new
-      (begin (vector-set! new index (generate-random-bits))
-						 (vec-sq-helper-rand new old (- index 1)))))
+;; constructs an array of length 12.
+(define (vector-twelve)
+  (vector-unfold (lambda (i x) (values x (generate-random-bits))) 12 (generate-random-bits)))
 
-
-(define (vector-table-rand vec)
-  (vec-sq-helper-rand (make-vector (vector-length vec))
-		 vec
-		 (- (vector-length vec) 1)))
-
-
-(define (vec-sq-helper new old index)
-  (if (< index 0)
-      new
-      (begin (vector-set! new index (vector-table-rand (make-vector 6)))
-						 (vec-sq-helper new old (- index 1)))))
-
-
-(define (vector-table vec)
-  (vec-sq-helper (make-vector (vector-length vec))
-		 vec
-		 (- (vector-length vec) 1)))
-
-(define vector-with-black
-	(vector-unfold (lambda (i x) (generate-random-bits))  6 generate-random-bits)
-
-	)
-
-
+;; constructs a vector from a vector of twelve bitvectors.
 (define init-zobrist
-	(let ([table (vector-table (make-vector 64))])
-		(begin
-			(vector-for-each (lambda (i x)
-												 (vector-for-each
-													(lambda (j y)
-														(print (bitvector->integer y)))	x)) table))))
+  (vector-unfold (lambda (i x) (values x (vector-twelve))) 64 (vector-twelve)))
 
-(vector-with-black)
+(define black-to-move (generate-random-bits))
 
-;;(bitvector->integer ( generate-random-bits))
+(define (zobrist-hash board-vec)
+  (let ([h (make-bitvector 64 0)])
+    (vector-for-each
+     (lambda (i x)
+       (begin
+	 (case x
+	   ['blackPawn   (bitvector-xor! h (vector-ref (vector-ref init-zobrist i) 0))]
+	   ['blackKnight (bitvector-xor! h (vector-ref (vector-ref init-zobrist i) 1))]
+	   ['blackBishop (bitvector-xor! h (vector-ref (vector-ref init-zobrist i) 2))]
+	   ['blackRook   (bitvector-xor! h (vector-ref (vector-ref init-zobrist i) 3))]
+	   ['blackQueen  (bitvector-xor! h (vector-ref (vector-ref init-zobrist i) 4))]
+	   ['blackKing   (bitvector-xor! h (vector-ref (vector-ref init-zobrist i) 5))]
+	   
+	   ['whitePawn   (bitvector-xor! h (vector-ref (vector-ref init-zobrist i) 6))]
+	   ['whiteKnight (bitvector-xor! h (vector-ref (vector-ref init-zobrist i) 7))]
+	   ['whiteBishop (bitvector-xor! h (vector-ref (vector-ref init-zobrist i) 8))]
+	   ['whiteRook   (bitvector-xor! h (vector-ref (vector-ref init-zobrist i) 9))]
+	   ['whiteQueen  (bitvector-xor! h (vector-ref (vector-ref init-zobrist i) 10))]
+	   ['whiteKing   (bitvector-xor! h (vector-ref (vector-ref init-zobrist i) 11))]
+	   )))
+     board-vec)
+    h))
 
-;;(bitvector->string ( generate-random-bits))
+(print (bitvector->string (zobrist-hash (bbindex (build-board-from-fen "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR")))))
 

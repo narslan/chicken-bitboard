@@ -5,7 +5,7 @@
 	srfi-69 ;; hash-tables
 	)
 
-(include "defboard.scm")
+(include "board.scm")
 
 (define :? abnf:optional-sequence)
 (define :! abnf:drop-consumed)
@@ -101,7 +101,6 @@
 		  (cons c '())))) position-chars)
 	 all-square-symbols))) ;;
 
-;; TODO: I should get rid of the following.
 ;; converting a character to a symbol:
 (define (char->symbol ch)
   (string->symbol (string ch)))
@@ -137,13 +136,14 @@
      (else (loop (cdr pos) boardfen)))))
 
 
-(time (draw-board (bbindex (build-board-from-fen "4k3/3p2p1/8/pP6/4P2P/8/8/4K3 w - a6 0 5"))))
+;(time (draw-board (bbindex (build-board-from-fen "4k3/3p2p1/8/pP6/4P2P/8/8/4K3 w - a6 0 5"))))
 
-(time (draw-board (bbindex (build-board-from-fen "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"))))
+;(time (draw-board (bbindex (build-board-from-fen "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"))))
 
-(time (draw-board (bbindex (build-board-from-fen "r1bk2qr/1pp5/p1n2b2/4pp1p/QPPP4/3n2PP/P2BqP1K/R1R5 w - - 2 23"))))
+;(time (draw-board (bbindex (build-board-from-fen "r1bk2qr/1pp5/p1n2b2/4pp1p/QPPP4/3n2PP/P2BqP1K/R1R5 w - - 2 23"))))
 
-(time (draw-board (bbindex (build-board-from-fen "r1bk2qr/1pp5/p1n2b2/4pp1p/QPPP4/3n2PP/P2BqP1K/R1R5 w - - 2 23"))))
+;(time (draw-board (bbindex (build-board-from-fen "r1bk2qr/1pp5/p1n2b2/4pp1p/QPPP4/3n2PP/P2BqP1K/R1R5 w - - 2 23"))))
+
 
 
 ;; rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1
